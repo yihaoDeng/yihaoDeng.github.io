@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>YiHao&#39;s Blog</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2016-09-02T09:33:40.000Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>yihao</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>ansible小试牛刀</title>
+    <link href="http://yoursite.com/2016/09/02/ansible%E5%B0%8F%E8%AF%95%E7%89%9B%E5%88%80/"/>
+    <id>http://yoursite.com/2016/09/02/ansible小试牛刀/</id>
+    <published>2016-09-02T09:21:22.000Z</published>
+    <updated>2016-09-02T09:33:40.000Z</updated>
+    
+    <content type="html">&lt;p&gt;1   先产生本地公钥&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ssh-keygen -t rsa&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;2  公钥拷贝到到到各个机器上&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ssh-copy-id -i ~/.ssh/id_rsa.pub hostnam&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;3  然后设置ansible 配置文件&lt;/p&gt;
+&lt;p&gt;  在/etc/ansible文件下 分别创建文件hosts 和ansible.cfg（如果没有该文件夹ansible，自行创建）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在hosts进行相应分组&lt;/strong&gt;&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[group1]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;hostname1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;hostname2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;[group2]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;hostnamex&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;hostnamey&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;在ansible.cfg 文件中填写一些默认配置&lt;/strong&gt;&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[defaults]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;host_key_checking = False&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;sudo_user = root&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;remote_user = 远程机器上你默认的用户名&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;如果在想在远程用root 执行命令， 则可以把hosts配置成这样，&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[group1]&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;xxx.xxx.xxx.xxx ansible_ssh_user=test ansible_ssh_pass=xxx ansible_su_pass=xxxxx&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;xxx.xxx.xxx.xxx ansible_ssh_user=test ansible_ssh_pass=xxx  ansible_su_pass=xxxxx&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;xxx.xxx.xxx.xxx ansible_ssh_user=test ansible_ssh_pass=xxx ansible_su_pass=xxxxxx&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;4  测试是否能用&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ansible group1 -a &amp;apos;who&amp;apos;  // 用配置文件默认的用户在远程机器上执行命令 `who`&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;ansible group2 -a &amp;apos;who&amp;apos; --sudo --ask-sudo-pass ／／ 用root 身份执行 `who`&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;ansible group1 -m copy -a &amp;quot;src=/Users/fdafda/test.txt dest=/usr/local/&amp;quot; --sudo --ask-sudo-pass // 把本地文件拷贝到group1机器下的/usr/local文件下&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;5   对于涉及过程比较多远程执行， 可以用ansible-playbook&lt;br&gt;    &lt;strong&gt;编写playbook.yml 文件， 试例如下:&lt;/strong&gt;&lt;br&gt;    &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;- hosts: group1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    become: yes&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;become_user: root&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;tasks:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    - name: updatefile&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;      shell: wget xxxxx/idgen/idgen_s&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;      register: out1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    - debug: msg=&amp;quot;&amp;#123;&amp;#123; out1.stdout   &amp;#125;&amp;#125;&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    -&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;  执行该命令&lt;/p&gt;
+&lt;p&gt; &lt;strong&gt;然后执行如下命令&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;ansible-playbook playbook.yml&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;/code&gt;&lt;/pre&gt;</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;1   先产生本地公钥&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;p
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>读取文件，出现了编码错误</title>
+    <link href="http://yoursite.com/2016/07/07/%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6%EF%BC%8C%E5%87%BA%E7%8E%B0%E4%BA%86%E7%BC%96%E7%A0%81%E9%94%99%E8%AF%AF/"/>
+    <id>http://yoursite.com/2016/07/07/读取文件，出现了编码错误/</id>
+    <published>2016-07-07T11:07:18.000Z</published>
+    <updated>2016-07-07T11:30:30.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt; 用scala读取本地文本文件， 出现了错误， 特此记录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;源程序&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;import scala.io.Source&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;Source.fromFile(&amp;quot;logExample.txt&amp;quot;).foreach(print)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;错误现象&lt;/p&gt;
+&lt;p&gt;文本在打印过程中出现下面的错误输出 &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;java.nio.charset.MalformedInputException: Input length = 1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at java.nio.charset.CoderResult.throwException(CoderResult.java:277)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:337)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:176)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at java.io.InputStreamReader.read(InputStreamReader.java:184)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at java.io.BufferedReader.fill(BufferedReader.java:153)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;at java.io.BufferedReader.read(BufferedReader.java:174)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;```  &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;-  解决方法&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;   貌似好多人在平时开发中也遇到这样的错误，网上也有各种解决方法。有人尝试这样的解决方法, 貌似有人居然也解决了问题，初步猜想是，默认编码方式错误。&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;   import scala.io.Source&lt;br&gt;    Source.fromFile(“logExample.txt”)(“UTF-8”).foreach(print)&lt;br&gt;   &lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;通用的的解决方法&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;**解决思路**： 检测出illegal UTF-8 byte sequence, 然后替换掉。 由于中文字符使用3个字节或者4个，所以可能被分开， 导致读取失败&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  import scala.io.Source
+import scala.io.Codec
+import java.nio.charset.CodingErrorAction
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;   implicit val codec = Codec(“UTF-8”)&lt;br&gt;   codec.onMalformedInput(CodingErrorAction.REPLACE)&lt;br&gt;   codec.onUnmappableCharacter(CodingErrorAction.REPLACE)&lt;br&gt;   Source.fromFile(“logExample.txt”).foreach(print)&lt;/p&gt;
+&lt;p&gt;   ```&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt; 用scala读取本地文本文件， 出现了错误， 特此记录&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;源程序&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>tiker与其他channel共用时问题</title>
+    <link href="http://yoursite.com/2016/07/04/tiker%E4%B8%8E%E5%85%B6%E4%BB%96channel%E5%85%AC%E7%94%A8%E6%97%B6%E9%97%AE%E9%A2%98/"/>
+    <id>http://yoursite.com/2016/07/04/tiker与其他channel公用时问题/</id>
+    <published>2016-07-04T08:38:34.000Z</published>
+    <updated>2016-07-04T14:20:17.000Z</updated>
+    
+    <content type="html">&lt;h4 id=&quot;ticker与其他channel共用时的问题&quot;&gt;&lt;a href=&quot;#ticker与其他channel共用时的问题&quot; class=&quot;headerlink&quot; title=&quot;ticker与其他channel共用时的问题&quot;&gt;&lt;/a&gt;ticker与其他channel共用时的问题&lt;/h4&gt;&lt;p&gt;见代码&lt;/p&gt;
+&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;21&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;22&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;23&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;24&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;25&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;26&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;27&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;28&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;29&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;30&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;31&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;32&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;33&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;34&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;35&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;package&lt;/span&gt; main&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; (&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&quot;fmt&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&quot;runtime&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;string&quot;&gt;&quot;time&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	runtime.GOMAXPROCS(runtime.NumCPU())&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	ch := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;, &lt;span class=&quot;number&quot;&gt;1024&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(ch &lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;int&lt;/span&gt;)&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;			val := &amp;lt;-ch&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;			fmt.Printf(&lt;span class=&quot;string&quot;&gt;&quot;val:%d\n&quot;&lt;/span&gt;, val)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&amp;#125;(ch)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	tick := time.NewTicker(&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt; * time.Second)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; i := &lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;; i &amp;lt; &lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;; i++ &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; ch &amp;lt;- i:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-tick.C:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;			fmt.Printf(&lt;span class=&quot;string&quot;&gt;&quot;%d: case &amp;lt;-tick.C\n&quot;&lt;/span&gt;, i)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;		time.Sleep(&lt;span class=&quot;number&quot;&gt;200&lt;/span&gt; * time.Millisecond)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;built_in&quot;&gt;close&lt;/span&gt;(ch)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	tick.Stop()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;代码结果&quot;&gt;&lt;a href=&quot;#代码结果&quot; class=&quot;headerlink&quot; title=&quot;代码结果&quot;&gt;&lt;/a&gt;代码结果&lt;/h4&gt;&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;4&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;5&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;6&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;7&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;8&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;9&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;10&lt;/span&gt;: &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-tick.C&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;11&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;12&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;13&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;14&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;15&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;number&quot;&gt;16&lt;/span&gt;: &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-tick.C&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;17&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;18&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;val:&lt;span class=&quot;number&quot;&gt;19&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;从结果中可以看出，作者本意是要输出0～19， 却不想被打断..&lt;/p&gt;
+&lt;h4 id=&quot;出现问题的代码&quot;&gt;&lt;a href=&quot;#出现问题的代码&quot; class=&quot;headerlink&quot; title=&quot;出现问题的代码&quot;&gt;&lt;/a&gt;出现问题的代码&lt;/h4&gt;&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; ch &amp;lt;- i:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-tick.C:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	fmt.Printf(&lt;span class=&quot;string&quot;&gt;&quot;%d: case &amp;lt;-tick.C\n&quot;&lt;/span&gt;, i)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意： 当两个case条件都满足的时候，运行时系统会通过一个伪随机的算法决定哪个case将会被执行&lt;br&gt;所以当tick.C条件满足的那个循环，有某种概率造成ch&amp;lt;-i没有发送(虽然通道两端没有阻塞，满足发送条件)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;解决方案一&quot;&gt;&lt;a href=&quot;#解决方案一&quot; class=&quot;headerlink&quot; title=&quot;解决方案一&quot;&gt;&lt;/a&gt;解决方案一&lt;/h4&gt;&lt;p&gt;一旦tick.C随机的case被随机到，就多执行一次ch&amp;lt;-i, 很显然，这个方法比较牵强，而且在i比较多的时候，很麻烦, 所以pass&lt;/p&gt;
+&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; ch &amp;lt;- i:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	&lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-tick.C:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	fmt.Printf(&lt;span class=&quot;string&quot;&gt;&quot;%d: case &amp;lt;-tick.C\n&quot;&lt;/span&gt;, i)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	ch &amp;lt;- i&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;解决方法二&quot;&gt;&lt;a href=&quot;#解决方法二&quot; class=&quot;headerlink&quot; title=&quot;解决方法二&quot;&gt;&lt;/a&gt;解决方法二&lt;/h4&gt;&lt;p&gt;将tick.C的case单独放到一个select里面，并加入一个default（保证不阻塞）, 这种处理方法就优雅的多。（这是参考网友的思路）&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;select &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;case ch &amp;lt;- i:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;select &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;case &amp;lt;-tick.C:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	fmt.Printf(&amp;quot;%d: case &amp;lt;-tick.C\n&amp;quot;, i)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	default:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;ticker与其他channel共用时的问题&quot;&gt;&lt;a href=&quot;#ticker与其他channel共用时的问题&quot; class=&quot;headerlink&quot; title=&quot;ticker与其他channel共用时的问题&quot;&gt;&lt;/a&gt;ticker与其他channel共用时的
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>golang超时处理</title>
+    <link href="http://yoursite.com/2016/07/04/golang%E8%B6%85%E6%97%B6%E5%A4%84%E7%90%86/"/>
+    <id>http://yoursite.com/2016/07/04/golang超时处理/</id>
+    <published>2016-07-04T06:52:54.000Z</published>
+    <updated>2016-07-04T07:20:31.000Z</updated>
+    
+    <content type="html">&lt;p&gt;   超时对于程序操作外部资源或者管理自身程序执行时间非常重要。在 Go 语言中，因为channel与select，所以实现超时非常容易与优雅。&lt;/p&gt;
+&lt;h4 id=&quot;案例程序一&quot;&gt;&lt;a href=&quot;#案例程序一&quot; class=&quot;headerlink&quot; title=&quot;案例程序一&quot;&gt;&lt;/a&gt;案例程序一&lt;/h4&gt;&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;21&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;22&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;23&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;24&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;25&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;26&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;27&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;28&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;29&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;30&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;31&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;32&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;33&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;34&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;35&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;36&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;37&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;38&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;39&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;40&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;41&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;42&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;43&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;44&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;45&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;46&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;47&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;48&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;49&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;package&lt;/span&gt; main&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;time&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&quot;fmt&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;	c1 := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        time.Sleep(time.Second * &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        c1 &amp;lt;- &lt;span class=&quot;string&quot;&gt;&quot;result 1&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; res := &amp;lt;-c1:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        fmt.Println(res)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-time.After(time.Second * &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;):&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        fmt.Println(&lt;span class=&quot;string&quot;&gt;&quot;timeout 1&quot;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    c2 := &lt;span class=&quot;built_in&quot;&gt;make&lt;/span&gt;(&lt;span class=&quot;keyword&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;string&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        time.Sleep(time.Second * &lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        c2 &amp;lt;- &lt;span class=&quot;string&quot;&gt;&quot;result 2&quot;&lt;/span&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;select&lt;/span&gt; &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; res := &amp;lt;-c2:&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        fmt.Println(res)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;case&lt;/span&gt; &amp;lt;-time.After(time.Second * &lt;span class=&quot;number&quot;&gt;3&lt;/span&gt;):&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;        fmt.Println(&lt;span class=&quot;string&quot;&gt;&quot;timeout 2&quot;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;运行结果&quot;&gt;&lt;a href=&quot;#运行结果&quot; class=&quot;headerlink&quot; title=&quot;运行结果&quot;&gt;&lt;/a&gt;运行结果&lt;/h4&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;timeout 1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;result 2&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;程序分析&quot;&gt;&lt;a href=&quot;#程序分析&quot; class=&quot;headerlink&quot; title=&quot;程序分析&quot;&gt;&lt;/a&gt;程序分析&lt;/h4&gt;&lt;p&gt;分析结果：主程序首先阻塞在 select中，如果在time.second &lt;em&gt; 1内收不到channel 发送过来的信号， 由于groutine 睡眠了time.second &lt;/em&gt; 2了， 则select 超时，下面的程序也是按照这个逻辑运行。&lt;/p&gt;
+&lt;h4 id=&quot;案例程序二&quot;&gt;&lt;a href=&quot;#案例程序二&quot; class=&quot;headerlink&quot; title=&quot;案例程序二&quot;&gt;&lt;/a&gt;案例程序二&lt;/h4&gt;&lt;figure class=&quot;highlight golang&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;fmt.Println(&lt;span class=&quot;string&quot;&gt;&quot;hello&quot;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;-time.After(&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt; * time.Second)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;fmt.Println(&lt;span class=&quot;string&quot;&gt;&quot;world&quot;&lt;/span&gt;)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;程序运行结果&quot;&gt;&lt;a href=&quot;#程序运行结果&quot; class=&quot;headerlink&quot; title=&quot;程序运行结果&quot;&gt;&lt;/a&gt;程序运行结果&lt;/h4&gt;&lt;p&gt;程序首先打印出 hello, 间隔 2*time.Second 后打印出world。&lt;/p&gt;
+&lt;h4 id=&quot;结果分析&quot;&gt;&lt;a href=&quot;#结果分析&quot; class=&quot;headerlink&quot; title=&quot;结果分析&quot;&gt;&lt;/a&gt;结果分析&lt;/h4&gt;&lt;p&gt;如果把&amp;lt;-time.After(2 &lt;em&gt; time.Second)改成 time.After(2 &lt;/em&gt; time.Second)，则 程序会立刻打印出hello及world&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;   超时对于程序操作外部资源或者管理自身程序执行时间非常重要。在 Go 语言中，因为channel与select，所以实现超时非常容易与优雅。&lt;/p&gt;
+&lt;h4 id=&quot;案例程序一&quot;&gt;&lt;a href=&quot;#案例程序一&quot; class=&quot;headerlink&quot; title=&quot;案例
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>golang的byte和int之间的转换</title>
+    <link href="http://yoursite.com/2016/07/04/golang%E7%9A%84byte%E5%92%8Cint%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2/"/>
+    <id>http://yoursite.com/2016/07/04/golang的byte和int之间的转换/</id>
+    <published>2016-07-04T06:47:12.000Z</published>
+    <updated>2016-07-04T06:49:19.000Z</updated>
+    
+    <content type="html">&lt;p&gt;golang的byte 和int的转换&lt;/p&gt;
+&lt;p&gt;在使用golang做数据传输的时候，会经常遇到byte与int的互转，但golang并没有现成的方法，因此只能通过binary包来解决&lt;br&gt;所以，需要 ：&lt;code&gt;import “encoding/binary”&lt;/code&gt;，又因为是byte的转换，所以还涉及到了bytes：&lt;code&gt;import “bytes”&lt;/code&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;8&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;9&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;10&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;11&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;12&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;13&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;14&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;15&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;16&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;17&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;18&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;19&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;20&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;21&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;22&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;23&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;package main&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;import (&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;quot;bytes&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;quot;encoding/binary&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;quot;fmt&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    &amp;quot;strings&amp;quot;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;func main() &amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    b := []byte&amp;#123;0x00, 0x00, 0x03, 0xe8&amp;#125;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    b_buf := bytes.NewBuffer(b)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    var x int32&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    binary.Read(b_buf, binary.BigEndian, &amp;amp;x)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    fmt.Println(x)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    fmt.Println(strings.Repeat(&amp;quot;-&amp;quot;, 100))  // string的一个函数&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    x = 1000&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    b_buf = bytes.NewBuffer([]byte&amp;#123;&amp;#125;)  // 可以直接为空进行初始化，&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    binary.Write(b_buf, binary.BigEndian, x)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    fmt.Println(b_buf.Bytes())&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;golang的byte 和int的转换&lt;/p&gt;
+&lt;p&gt;在使用golang做数据传输的时候，会经常遇到byte与int的互转，但golang并没有现成的方法，因此只能通过binary包来解决&lt;br&gt;所以，需要 ：&lt;code&gt;import “encoding/binary”&lt;/
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>time_wait过多分析</title>
+    <link href="http://yoursite.com/2016/07/04/time-wait%E8%BF%87%E5%A4%9A%E5%88%86%E6%9E%90/"/>
+    <id>http://yoursite.com/2016/07/04/time-wait过多分析/</id>
+    <published>2016-07-04T03:48:34.000Z</published>
+    <updated>2016-07-04T07:01:10.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;  最近DBA发现Atlas和mysql之间存在大量处于time-waiter状态的connect,。 这个现象很不合理，因为Atlas是复用connect, 也就是说：当前端有一个请求过来的时候， Atlas会在当前线程的连接池中取一个可用连接，并且在处理完该请求后，会把该connect放回到连接池中，当然对于需要维持session的请求（事务、在server端处理的prepare()），只有当客户显式调用close的时候，才会把该connect放回到连接池中。因此想找找原因， 之前觉得对｀time_wait｀ 理解的还行，但具体过程也淡忘了， 之后看到了某作者写的这篇文章， 觉得写的挺详细的， 特别转载以方便以后查询。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;［转载文章如下］&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TIME_WAIT的产生原因&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为TCP连接是双向的，所以在关闭连接的时候，两个方向各自都需要关闭。先发FIN包的一方执行的是主动关闭；后发FIN包的一方执行的是被动关闭。主动关闭的一方会进入TIME_WAIT状态，并且在此状态停留两倍的&lt;br&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Maximum_Segment_Lifetime&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;MSL&lt;/a&gt;时长。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/3675218771011332995.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-2cf093f636d180b4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;3675218771011332995&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;MSL指的是报文段的最大生存时间，如果报文段在网络活动了MSL时间，还没有被接收，那么会被丢弃。关于MSL的大小，&lt;a href=&quot;http://tools.ietf.org/search/rfc793&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;RFC 793&lt;/a&gt;协议中给出的建议是两分钟，不过实际上不同的操作系统可能有不同的设置，以Linux为例，通常是半分钟，两倍的MSL就是一分钟，也就是60秒，并且这个数值是硬编码在&lt;a href=&quot;https://github.com/torvalds/linux/blob/master/include/net/tcp.h&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;内核&lt;/a&gt;中的，也就是说除非你重新编译内核，否则没法修改它。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TIME_WAIT的产生原因&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因为TCP连接是双向的，所以在关闭连接的时候，两个方向各自都需要关闭。先发FIN包的一方执行的是主动关闭；后发FIN包的一方执行的是被动关闭。主动关闭的一方会进入TIME_WAIT状态，并且在此状态停留两倍的MSL时长。TIME_WAIT问题小结 – 网易杭州QA – 网易杭州 QA TeamMSL指的是报文段的最大生存时间，如果报文段在网络活动了MSL时间，还没有被接收，那么会被丢弃。关于MSL的大小，RFC 793协议中给出的建议是两分钟，不过实际上不同的操作系统可能有不同的设置，以Linux为例，通常是半分钟，两倍的MSL就是一分钟，也就是60秒，并且这个数值是硬编码在内核中的，也就是说除非你重新编译内核，否则没法修改它。TIME_WAIT状态存在的必要性。为什么主动关闭的一端不直接进入closed状态，而是要先进入time_wait并且停留两倍的MSL时长呢？这是因为TCP是建立在不可靠网络上的可靠协议。如果主动关闭的一端收到被动关闭一端的发出的FIN包后，返回ACK包，同时进入TIME_WAIT，但是由于网络的原因，主动关闭一端发送的ACK包可能会延迟，从而触发被动关闭一方重传FIN包，这样一来一回极端情况正好是2MSL。如果主动关闭的一端直接close或者不到两倍MSL时间就关闭，那么被动关闭发出重传FIN包到达，可能出现的问题是：旧的连接不存在，系统只能返回RST包；新的TCP连接已经建立，延迟包可能会干扰新连接。这都可能导致TCP不可靠。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TIME_WAIT过多的危害&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在生产过程中，如果服务器使用短连接，那么完成一次请求后会主动断开连接，就会造成大量time_wait状态。因此我们常常在系统中会采用长连接，减少建立连接的消耗，同时也减少TIME_WAIT的产生，但实际上即使使用长连接配置不当时，当TIME_WAIT的生产速度远大于其消耗速度时，系统仍然会累计大量的TIME_WAIT状态的连接。TIME_WAIT状态连接过多就会造成一些问题。如果客户端的TIME_WAIT连接过多，同时它还在不断产生，将会导致客户端端口耗尽，新的端口分配不出来，出现错误。如果服务器端的TIME_WAIT连接过多，可能会导致客户端的请求连接失败，这在接下来举例说明。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TIME_WAIT**&lt;/strong&gt;问题定位**&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;案例一：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;将nginx作为反向代理时，后连tomcat等服务器。测试中不同并发压力下多次、反复出现nginx服务器端口资源耗尽的问题。表现为nginx服务器出现大量time_wait状态连接，端口资源耗尽（nginx报错：cannot assign requested address ）。首先检查nginx开启了长连接keepalive，但是系统仍然出现了大量的TIME_WAIT，这就和之前提到的当系统产生TIME_WAIT的速度大于其消耗速度时，就会累计TIME_WAIT。原因是：keepalive取配置太小，将其增大后问题得以解决。(PS:nginx总的keepalive连接池大小 = keepalive取值 * nginx worker数）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;案例二：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;某应用其中一层系统架构Nginx+Tomcat，客户端发出的请求为HTTP HEAD，客户端TPS有段时间接近为0，返回Connection time out错误。&lt;br&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/6597301763611814346.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-a7019b821123b1c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;6597301763611814346&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;观察大部分错误请求响应时间刚好是30s，这正好是nginx的连接超时时间配置，Tomcat没有收到这些错误请求，这意味着请求Nginx连接Tomcat都没有成功。这是为什么呢？Tomcat的连接池不够用吗？ 实际上Tomcat work线程不到200个，远小于MaxThread(1024)的值，同时还观察到Tomcat上的TIME_WAIT连接数量不正常，达到了近两万个。&lt;br&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/736338539175571363.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-3b6513ad036215e5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;736338539175571363&quot;&gt;&lt;/a&gt;&lt;br&gt;系统是设置了长连接的，为什么还有这么多TIME_WAIT，难道长连接没有生效吗？&lt;br&gt;Nginx作为反向代理，长连接配置主要有三项，upstream中的keepalive设置单个worker最大请求数，参数proxy_http_version  1.1强制转换为http1.1协议(默认支持长连接)，proxy_set_header Connection将请求头部connection为空(http1.0请求默认connection头部为close)&lt;br&gt;upstream backend_nosfs {&lt;br&gt;server 10.10.10.10:8185;&lt;br&gt;keepalive 1024;&lt;br&gt;   keepalive_requests;&lt;br&gt;}&lt;br&gt;proxy_http_version 1.1;&lt;br&gt;proxy_set_header Connection “”;&lt;br&gt;Tomcat端增加配置maxKeepAliveRequests=“10000”，表示一个连接上最大请求数达到10000才会断开。&lt;br&gt;定位长连接问题，最简单直接的方法就是抓包，通过wireshark分析Nginx和Tomcat直接连接果然没有生效，一条连接只处理了一个请求。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/796011234238224070.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-65b6b099d0c154e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;796011234238224070&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;为什么设置了长连接相关的配置，还是没有生效呢？经过排查发现，proxy_http_version 1.1;&lt;br&gt;proxy_set_header Connection “”这两项配置放在Nginx的Http域中，实际上他们要放在server域才会生效，将其位置修改后，长连接生效了，所有问题都解决了。但是我们不禁会尝试疑问TIME_WAIT出现在Tomcat而不是在Nginx上？从抓包可以看出Nginx发送给Tomcat包头部Connection为close，所以Tomcat在处理完head请求后就主动关闭，所以TIME_WAIT出现在Tomcat服务器。 配置修改后，问题解决了，TPS也上去了，之前出现的连接失败问题也没有了。&lt;br&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/3196992785579897494.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-61f87a3264e0372f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;3196992785579897494&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;但是为什么Tomcat服务器上的TIME_WAIT过多会导致Nginx连接失败呢？理论上说，服务器只监听在一个端口，但是会new出很多socket去处理请求，难道是socket不够用吗？再观察资源使用发现虽然TIME_WAIT连接数多，但是句柄数并不多，而socket的数量是受制于句柄数。那真正的原因是什么呢？在系统TIME_WAIT较多时，Dmesg系统出错日志为：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;nf_conntrack: table full, dropping packet&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;真相大白了，Conntrack表用于记录每个连接的状态，在tcp协议中用源ip/port+目的ip/port唯一标识一个连接。记录TCP连接状态的表满了导致请求失败。查看系统ip_contrack_max配置为65536，在极端的情况下超出了其配置所有导致连接失败。&lt;br&gt;&lt;a href=&quot;http://www.zuoqin.me/wp-content/uploads/2015/08/1808476725466247815.png&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/1968185-8f50d819fd54826d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;1808476725466247815&quot;&gt;&lt;/a&gt;&lt;br&gt;&lt;strong&gt;如何控制TIME_WAIT**&lt;/strong&gt;的数量**&lt;/p&gt;
+&lt;p&gt;通过以上的TIME_WAIT问题，我们可以看到TIME_WAIT这个状态不存在不行，但是过多就对系统会造成困扰。那么我们应该如何控制TIME_WAIT的数量呢？&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;长连接&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对于反向代理和应用服务器，最好是要配置成支持keepalive长连接，否则在系统并发增加时会导致一系列的连接问题。对于nginx+tomcat长连接的配置前面有一些介绍可以参考,其它服务器一般也是提供支持长连接配置的，设置后建议抓包测试验证。&lt;br&gt;一般来说长连接设置正确了TIME_WAIT数量不会暴涨，但是长连接最大请求数也是有效的，但如果应用的处理速度很快导致TIME_WAIT的产生的速度远快于TIME_WAIT的消耗速度时系统就会累计TIME_WAIT状态连接。这时候可能就要修改一些系统配置了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ip_conntrack&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;用于跟踪TCP连接。一旦激活了此模块，就能在系统参数里发现很多用来控制网络连接状态超时的设置，其中自然也包括TIME_WAIT，默认ip_conntrack_max最大为65536，可以将其设置得更大一些。一般不建议此模块，如果系统安装使用iptable会启动该模块。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;tcp_tw_recycle&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在网上搜索TIME_WAIT问题的解决方法，大多都会提到这个参数，不过官方网站上不建议开启这个参数，原因是会导致一些安全问题。例如，当多个客户端通过NAT方式联网并与服务端交互时，服务端看到的是同一个IP，由于这些客户端的时间戳可能存在差异，所以从服务端的视角看，便可能出现时间戳错乱的现象，进而直接导致时间戳小的数据包被丢弃。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;tcp_tw_reuse&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;当创建新连接的时候，如果可能的话会考虑复用相应的TIME_WAIT连接。官方文档里提到的是如果从协议视角看它是安全的，那么就可以使用。这个很难判定这个参数是否应该开启，不到万不得已的时候，即使我们要开启这个参数复用连接，也应该在连接的发起方使用，而不能在被连接方使用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;tcp_max_tw_buckets&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;用于控制TIME_WAIT总数。这个选项是为了阻止一些简单的DoS攻击，平常不要人为的降低它。如果TIME_WAIT已经成为最棘手的问题，那么即便此时并不是DoS攻击的场景，也可以尝试通过设置它来减少TIME_WAIT数量。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;  最近DBA发现Atlas和mysql之间存在大量处于time-waiter状态的connect,。 这个现象很不合理，因为Atlas是复用connect, 也就是说：当前端有一个请求过来的时候， Atlas会在当前线程的连接池中取一个可用连接，
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>常用的几个正则</title>
+    <link href="http://yoursite.com/2016/06/30/%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E4%B8%AA%E6%AD%A3%E5%88%99/"/>
+    <id>http://yoursite.com/2016/06/30/常用的几个正则/</id>
+    <published>2016-06-30T10:36:04.000Z</published>
+    <updated>2016-07-04T06:25:41.000Z</updated>
+    
+    <content type="html">&lt;h4 id=&quot;20多个正则表达式&quot;&gt;&lt;a href=&quot;#20多个正则表达式&quot; class=&quot;headerlink&quot; title=&quot;20多个正则表达式&quot;&gt;&lt;/a&gt;20多个正则表达式&lt;/h4&gt;&lt;p&gt;熟练应用正则表达式，能够快速实现一个非常复杂的义务逻辑。 在日常开发中也非常重要， 看到网上的一些资料，整理了一下，方便以后查询。&lt;/p&gt;
+&lt;p&gt;正则表达式经常被用于字段或任意字符串的校验，如下面这段校验基本日期格式的&lt;br&gt;&lt;code&gt;JavaScript&lt;/code&gt;代码：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;var reg = /^(\\d&amp;#123;1,4&amp;#125;)(-|\\/)(\\d&amp;#123;1,2&amp;#125;)\\2(\\d&amp;#123;1,2&amp;#125;)$/; &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;var r = fieldValue.match(reg);             &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;if(r==null)alert(&amp;apos;Date format error!&amp;apos;);r&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;下面是网友整理的，在前端开发中经常使用到的20个正则表达式。&lt;/p&gt;
+&lt;p&gt;1 . 校验密码强度&lt;br&gt;密码的强度必须是包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).&amp;#123;8,10&amp;#125;$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;2 . 校验中文&lt;/p&gt;
+&lt;p&gt;字符串仅能是中文。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^[\\u4e00-\\u9fa5]&amp;#123;0,&amp;#125;$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;3 . 由数字、26个英文字母或下划线组成的字符串&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^\\w+$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;4 . 校验E-Mail 地址&lt;br&gt;同密码一样，下面是E-mail地址合规性的正则检查语句。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;[\\w!#$%&amp;amp;&amp;apos;*+/=?^_`&amp;#123;|&amp;#125;~-]+(?:\\.[\\w!#$%&amp;amp;&amp;apos;*+/=?^_`&amp;#123;|&amp;#125;~-]+)*@(?:[\\w](?:[\\w-]*[\\w])?\\.)+[\\w](?:[\\w-]*[\\w])?&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;5 . 校验身份证号码 &lt;/p&gt;
+&lt;p&gt;下面是身份证号码的正则校验。15 或 18位。&lt;/p&gt;
+&lt;p&gt;15位：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^[1-9]\\d&amp;#123;7&amp;#125;((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d&amp;#123;3&amp;#125;$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;18位：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^[1-9]\\d&amp;#123;5&amp;#125;[1-9]\\d&amp;#123;3&amp;#125;((0\\d)|(1[0-2]))(([0|1|2]\\d)|3[0-1])\\d&amp;#123;3&amp;#125;([0-9]|X)$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;6 . 校验日期&lt;br&gt;“yyyy-mm-dd“ 格式的日期校验，已考虑平闰年。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^(?:(?!0000)[0-9]&amp;#123;4&amp;#125;-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-8])|(?:0[13-9]|1[0-2])-(?:29|30)|(?:0[13578]|1[02])-31)|(?:[0-9]&amp;#123;2&amp;#125;(?:0[48]|[2468][048]|[13579][26])|(?:0[48]|[2468][048]|[13579][26])00)-02-29)$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;7 . 校验金额&lt;br&gt;金额校验，精确到2位小数。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^[0-9]+(.[0-9]&amp;#123;2&amp;#125;)?$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;8 . 校验手机号&lt;br&gt;下面是国内 13、15、18开头的手机号正则表达式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d&amp;#123;8&amp;#125;$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;9 . 判断IE的版本&lt;br&gt;IE目前还没被完全取代，很多页面还是需要做版本兼容，下面是IE版本检查的表达式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^.*MSIE [5-8](?:\\.[0-9]+)?(?!.*Trident\\/[5-9]\\.0).*$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;10 . 校验IP-v4地址&lt;br&gt;IP4 正则语句。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.)&amp;#123;3&amp;#125;(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;11 . 校验IP-v6地址&lt;br&gt;IP6 正则语句。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;(([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;7,7&amp;#125;[0-9a-fA-F]&amp;#123;1,4&amp;#125;|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,7&amp;#125;:|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,6&amp;#125;:[0-9a-fA-F]&amp;#123;1,4&amp;#125;|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,5&amp;#125;(:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,2&amp;#125;|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,4&amp;#125;(:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,3&amp;#125;|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,3&amp;#125;(:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,4&amp;#125;|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,2&amp;#125;(:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,5&amp;#125;|[0-9a-fA-F]&amp;#123;1,4&amp;#125;:((:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,6&amp;#125;)|:((:[0-9a-fA-F]&amp;#123;1,4&amp;#125;)&amp;#123;1,7&amp;#125;|:)|fe80:(:[0-9a-fA-F]&amp;#123;0,4&amp;#125;)&amp;#123;0,4&amp;#125;%[0-9a-zA-Z]&amp;#123;1,&amp;#125;|::(ffff(:0&amp;#123;1,4&amp;#125;)&amp;#123;0,1&amp;#125;:)&amp;#123;0,1&amp;#125;((25[0-5]|(2[0-4]|1&amp;#123;0,1&amp;#125;[0-9])&amp;#123;0,1&amp;#125;[0-9])\\.)&amp;#123;3,3&amp;#125;(25[0-5]|(2[0-4]|1&amp;#123;0,1&amp;#125;[0-9])&amp;#123;0,1&amp;#125;[0-9])|([0-9a-fA-F]&amp;#123;1,4&amp;#125;:)&amp;#123;1,4&amp;#125;:((25[0-5]|(2[0-4]|1&amp;#123;0,1&amp;#125;[0-9])&amp;#123;0,1&amp;#125;[0-9])\\.)&amp;#123;3,3&amp;#125;(25[0-5]|(2[0-4]|1&amp;#123;0,1&amp;#125;[0-9])&amp;#123;0,1&amp;#125;[0-9]))&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;12 . 检查URL的前缀&lt;br&gt;应用开发中很多时候需要区分请求是HTTPS还是HTTP，通过下面的表达式可以取出一个url的前缀然后再逻辑判断。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;if (!s.match(/^[a-zA-Z]+:\\/\\//))&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#123;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;    s = &amp;apos;http://&amp;apos; + s;&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;13 . 提取URL链接&lt;br&gt;下面的这个表达式可以筛选出一段文本中的URL。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^(f|ht)&amp;#123;1&amp;#125;(tp|tps):\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- ./?%&amp;amp;=]*)?&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;14 . 文件路径及扩展名校验&lt;br&gt;验证文件路径和扩展名&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^([a-zA-Z]\\:|\\\\)\\\\([^\\\\]+\\\\)*[^\\/:*?&amp;quot;&amp;lt;&amp;gt;|]+\\.txt(l)?$&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;15 . 提取Color Hex Codes&lt;br&gt;有时需要抽取网页中的颜色代码，可以使用下面的表达式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;\\#([a-fA-F]|[0-9])&amp;#123;3,6&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;16 . 提取网页图片&lt;br&gt;假若你想提取网页中所有图片信息，可以利用下面的表达式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;\\&amp;lt; *[img][^\\&amp;gt;]*[src] *= *[\\&amp;quot;\\&amp;apos;]&amp;#123;0,1&amp;#125;([^\\&amp;quot;\\&amp;apos;\\ &amp;gt;]*)&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;17 . 提取页面超链接&lt;br&gt;提取html中的超链接。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;(&amp;lt;a\\s*(?!.*\\brel=)[^&amp;gt;]*)(href=&amp;quot;https?://)((?!(?:(?:www\\.)?&amp;apos;.implode(&amp;apos;|(?:www\\.)?&amp;apos;, $follow_list).&amp;apos;))[^&amp;quot;]+)&amp;quot;((?!.*\\brel=)[^&amp;gt;]*)(?:[^&amp;gt;]*)&amp;gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;18 . 精炼CSS&lt;br&gt;通过下面的表达式，可以搜索相同属性值的CSS，从而达到精炼代码的目的。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;^\\s*[a-zA-Z\\-]+\\s*[:]&amp;#123;1&amp;#125;\\s[a-zA-Z0-9\\s.#]+[;]&amp;#123;1&amp;#125;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;19 . 抽取注释&lt;br&gt;如果你需要移除HMTL中的注释，可以使用如下的表达式。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;!--(.*?)--&amp;gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;20 . 匹配HTML标签 &lt;/p&gt;
+&lt;p&gt;通过下面的表达式可以匹配出HTML中的标签。&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&amp;lt;/?\\w+((\\s+\\w+(\\s*=\\s*(?:&amp;quot;.*?&amp;quot;|&amp;apos;.*?&amp;apos;|[\\^&amp;apos;&amp;quot;&amp;gt;\\s]+))?)+\\s*|\\s*)/?&amp;gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;p&gt;note: regex101是一个非常不错的正则表达式在线测试工具，你可以直接在线测试你的正则表达式哦。&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;20多个正则表达式&quot;&gt;&lt;a href=&quot;#20多个正则表达式&quot; class=&quot;headerlink&quot; title=&quot;20多个正则表达式&quot;&gt;&lt;/a&gt;20多个正则表达式&lt;/h4&gt;&lt;p&gt;熟练应用正则表达式，能够快速实现一个非常复杂的义务逻辑。 在日常开发中也非常重要， 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Golang的数组和切片</title>
+    <link href="http://yoursite.com/2016/06/30/Golang%E7%9A%84%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87/"/>
+    <id>http://yoursite.com/2016/06/30/Golang的数组和切片/</id>
+    <published>2016-06-30T07:08:27.000Z</published>
+    <updated>2016-06-30T07:26:06.000Z</updated>
+    
+    <content type="html">&lt;h3 id=&quot;数组Arrays&quot;&gt;&lt;a href=&quot;#数组Arrays&quot; class=&quot;headerlink&quot; title=&quot;数组Arrays&quot;&gt;&lt;/a&gt;数组Arrays&lt;/h3&gt;&lt;p&gt;   数组是内置(build-in)类型,是一组同类型数据的集合，它是值类型，通过从0开始的下标索引访问元素值。在初始化后长度是固定的，无法修改其长度。当作为方法的入参传入时将复制一份数组而不是引用同一指针。数组的长度也是其类型的一部分，通过内置函数len(array)获取其长度。&lt;/p&gt;
+&lt;h4 id=&quot;数组初始化&quot;&gt;&lt;a href=&quot;#数组初始化&quot; class=&quot;headerlink&quot; title=&quot;数组初始化&quot;&gt;&lt;/a&gt;数组初始化&lt;/h4&gt;&lt;p&gt;[5]int {1,2,3,4,5}&lt;br&gt;    长度为5的数组，其元素值依次为：1，2，3，4，5&lt;/p&gt;
+&lt;p&gt;[5] int {1,2}长度为5的数组，其元素值依次为：1，2，0，0，0 。在初始化时没有指定初值的元素将会赋值为其元素类型int的默认值0,string的默认值是””&lt;/p&gt;
+&lt;p&gt;[…] int {1,2,3,4,5} 长度为5的数组，其长度是根据初始化时指定的元素个数决定的&lt;/p&gt;
+&lt;p&gt;[5]int{ 2:1,3:2,4:3} 长度为5的数组，key:value,其元素值依次为：0，0，1，2，3。在初始化时指定了2，3，4索引中对应的值：1，2，3&lt;/p&gt;
+&lt;p&gt;[…] int {2:1,4:3} 长度为5的数组，起元素值依次为：0，0，1，0，3。由于指定了最大索引4对应的值3，根据初始化的元素个数确定其长度为5&lt;/p&gt;
+&lt;h3 id=&quot;切片Slices&quot;&gt;&lt;a href=&quot;#切片Slices&quot; class=&quot;headerlink&quot; title=&quot;切片Slices&quot;&gt;&lt;/a&gt;切片Slices&lt;/h3&gt;&lt;p&gt;数组的长度不可改变，在特定场景中这样的集合就不太适用，Go中提供了一种灵活，功能强悍的内置类型Slices切片,与数组相比切片的长度是不固定的，可以追加元素，在追加时可能使切片的容量增大。切片中有两个概念：一是len长度，二是cap容量，长度是指已经被赋过值的最大下标+1，可通过内置函数len()获得。容量是指切片目前可容纳的最多元素个数，可通过内置函数cap()获得。切片是引用类型，因此在当传递切片时将引用同一指针，修改值将会影响其他的对象。&lt;/p&gt;
+&lt;h4 id=&quot;切片初始化&quot;&gt;&lt;a href=&quot;#切片初始化&quot; class=&quot;headerlink&quot; title=&quot;切片初始化&quot;&gt;&lt;/a&gt;切片初始化&lt;/h4&gt;&lt;p&gt;切片可以通过数组来初始化，也可以通过内置函数make()初始化 .初始化时len=cap,在追加元素时如果容量cap不足时将按len的2倍扩容 查看示例代码，在线运行示例代码&lt;/p&gt;
+&lt;p&gt;s :=[] int {1,2,3}&lt;/p&gt;
+&lt;p&gt;直接初始化切片，[]表示是切片类型，{1,2,3}初始化值依次是1,2,3.其cap=len=3&lt;/p&gt;
+&lt;p&gt;s := arr[:] &lt;/p&gt;
+&lt;p&gt;初始化切片s,是数组arr的引用&lt;/p&gt;
+&lt;p&gt;s := arr[startIndex:endIndex] &lt;/p&gt;
+&lt;p&gt;将arr中从下标startIndex到endIndex-1 下的元素创建为一个新的切片&lt;/p&gt;
+&lt;p&gt;s := arr[startIndex:] &lt;/p&gt;
+&lt;p&gt;缺省endIndex时将表示一直到arr的最后一个元素&lt;/p&gt;
+&lt;p&gt;s := arr[:endIndex] &lt;/p&gt;
+&lt;p&gt;缺省startIndex时将表示从arr的第一个元素开始&lt;/p&gt;
+&lt;p&gt;s1 := s[startIndex:endIndex] &lt;/p&gt;
+&lt;p&gt;通过切片s初始化切片s1&lt;/p&gt;
+&lt;p&gt;s :=make([]int,len,cap) &lt;/p&gt;
+&lt;p&gt;通过内置函数make()初始化切片s,[]int 标识为其元素类型为int的切片&lt;br&gt;赋值与使用&lt;/p&gt;
+&lt;p&gt;切片是引用类型，在使用时需要注意其操作。查看示例代码 ，在线运行示例代码 切片可以通过内置函数append(slice []Type,elems …Type)追加元素，elems可以是一排type类型的数据，也可以是slice,因为追加的一个一个的元素，因此如果将一个slice追加到另一个slice中需要带上”…”，这样才能表示是将slice中的元素依次追加到另一个slice中。另外在通过下标访问元素时下标不能超过len大小，如同数组的下标不能超出len范围一样。&lt;/p&gt;
+&lt;h4 id=&quot;切片的一种特殊用法&quot;&gt;&lt;a href=&quot;#切片的一种特殊用法&quot; class=&quot;headerlink&quot; title=&quot;切片的一种特殊用法&quot;&gt;&lt;/a&gt;切片的一种特殊用法&lt;/h4&gt;&lt;p&gt;s :=append(s,1,2,3,4)&lt;br&gt;s :=append(s,s1…) // 这个是把S1切片中的都追加到切片s中&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;note: 注意&lt;strong&gt;切片传递的是引用&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;数组Arrays&quot;&gt;&lt;a href=&quot;#数组Arrays&quot; class=&quot;headerlink&quot; title=&quot;数组Arrays&quot;&gt;&lt;/a&gt;数组Arrays&lt;/h3&gt;&lt;p&gt;   数组是内置(build-in)类型,是一组同类型数据的集合，它是值类型，通过从0开始的
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>locate/whereis/which等区别</title>
+    <link href="http://yoursite.com/2016/06/30/locate-whereis-which%E7%AD%89%E5%8C%BA%E5%88%AB/"/>
+    <id>http://yoursite.com/2016/06/30/locate-whereis-which等区别/</id>
+    <published>2016-06-30T07:00:29.000Z</published>
+    <updated>2016-06-30T07:04:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;strong&gt;locate&lt;/strong&gt; 其实是&lt;code&gt;find -name&lt;/code&gt;的别称&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;whereis&lt;/strong&gt; 命令只能用于程序名的搜索&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;which&lt;/strong&gt; 在PATH 变量的路径中， 搜索某个系统命令的位置，并且返回第一个搜索结果， 也就是说，使用which命令， 就可以看到某个命令是否存在，以及执行的到底是哪一个位置的命令&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;type&lt;/strong&gt;  用来区分某一个命令到底是shell 自带的， 还是由一个外部独立的二进制文件提供的， 如果一个命令是外部命令，那么使用-p参数，会显示该命令的路径，相当于&lt;code&gt;which&lt;/code&gt;命令.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;trap&lt;/strong&gt;  是一个shell内建命令，它用来在脚本中指定信号如何处理。比如，按Ctrl+C会使脚本终止执行，实际上系统发送了SIGINT信号给脚本进程，SIGINT信号的默认处理方式就是退出程序。如果要在Ctrl+C不退出程序，那么就得使用trap命令来指定一下SIGINT的处理方式了。trap命令不仅仅处理Linux信号，还能对脚本退出（EXIT）、调试（DEBUG）、错误（ERR）、返回（RETURN）等情况指定处理方式。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;locate&lt;/strong&gt; 其实是&lt;code&gt;find -name&lt;/code&gt;的别称&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;whereis&lt;/strong&gt; 命令只能用于程序名的搜索&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;which&lt;/strong&gt; 在PATH 变量
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>mesos_install</title>
+    <link href="http://yoursite.com/2016/06/30/mesos_install/"/>
+    <id>http://yoursite.com/2016/06/30/mesos_install/</id>
+    <published>2016-06-30T02:39:26.000Z</published>
+    <updated>2016-06-30T02:44:24.000Z</updated>
+    
+    <content type="html">&lt;blockquote&gt;
+&lt;p&gt;为了使用spark 的基于mesos的集群方式, 需要安装mesos, 网上教程很多，但感觉有些繁琐，其实说起来也就几步而已。 &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;下载mvn, 并建立软连接&lt;br&gt; &lt;code&gt;wget http://mirror.nexcess.net/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz&lt;/code&gt;&lt;br&gt;  &lt;code&gt;sudo tar -zxf apache-maven-3.0.5-bin.tar.gz -C /opt/&lt;/code&gt;&lt;br&gt;  &lt;code&gt;sudo ln -s /opt/apache-maven-3.0.5/bin/mvn /usr/bin/mvn&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;yum直接安装各种依耐包&lt;br&gt;  &lt;code&gt;sudo yum install -y python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel subversion-devel apr-util-devel gcc-g++&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;下载mesos源码包&lt;br&gt;&lt;code&gt;http://archive.apache.org/dist/mesos/0.21.0/mesos-0.21.0.tar.gz (下载这个版本主要是为了匹配spark 1.6.1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;解压该源码包并执行编译、安装(在编译阶段会去下载大量的包， 整个过程 一般得20～30 分钟)&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;为了使用spark 的基于mesos的集群方式, 需要安装mesos, 网上教程很多，但感觉有些繁琐，其实说起来也就几步而已。 &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;下载mvn, 并建立软连接&lt;br&gt; &lt;code&gt;wget 
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>使用ipython+pyspark</title>
+    <link href="http://yoursite.com/2016/06/30/first/"/>
+    <id>http://yoursite.com/2016/06/30/first/</id>
+    <published>2016-06-30T02:09:38.000Z</published>
+    <updated>2016-06-30T02:28:16.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;em&gt;ipython 启动时找不到spark&lt;/em&gt;&lt;br&gt;ipython notebook –profile=pytest&lt;br&gt;在启动spark 可以这样设置&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;2&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;3&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;4&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;5&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;6&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;7&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; findspark&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;findspark.init()&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;spark_home = os.environ.get(&lt;span class=&quot;string&quot;&gt;&#39;SPARK_HOME&#39;&lt;/span&gt;, &lt;span class=&quot;keyword&quot;&gt;None&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;sc = pyspark.SparkContext(appName=&lt;span class=&quot;string&quot;&gt;&quot;myAppName&quot;&lt;/span&gt;)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;text_file = sc.textFile(spark_home + &lt;span class=&quot;string&quot;&gt;&quot;/README.md&quot;&lt;/span&gt;) &lt;/div&gt;&lt;div class=&quot;line&quot;&gt;word_counts = text_file.flatMap(&lt;span class=&quot;keyword&quot;&gt;lambda&lt;/span&gt; line: line.split()).map(&lt;span class=&quot;keyword&quot;&gt;lambda&lt;/span&gt; word: (word, &lt;span class=&quot;number&quot;&gt;1&lt;/span&gt;)).reduceByKey(&lt;span class=&quot;keyword&quot;&gt;lambda&lt;/span&gt; a, b: a + b)&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;word_counts.collect()&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;pyspark在启动的时候，可以指定相应的集群名称，比如 local,  或者 mesos的集群什么的&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;em&gt;ipython 启动时找不到spark&lt;/em&gt;&lt;br&gt;ipython notebook –profile=pytest&lt;br&gt;在启动spark 可以这样设置&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td cl
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://yoursite.com/2016/06/30/hello-world/"/>
+    <id>http://yoursite.com/2016/06/30/hello-world/</id>
+    <published>2016-06-30T01:49:12.000Z</published>
+    <updated>2016-06-30T01:49:12.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Run-server&quot;&gt;&lt;a href=&quot;#Run-server&quot; class=&quot;headerlink&quot; title=&quot;Run server&quot;&gt;&lt;/a&gt;Run server&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;$ hexo server&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/server.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Server&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Generate-static-files&quot;&gt;&lt;a href=&quot;#Generate-static-files&quot; class=&quot;headerlink&quot; title=&quot;Generate static files&quot;&gt;&lt;/a&gt;Generate static files&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;$ hexo generate&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/generating.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Generating&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;Deploy-to-remote-sites&quot;&gt;&lt;a href=&quot;#Deploy-to-remote-sites&quot; class=&quot;headerlink&quot; title=&quot;Deploy to remote sites&quot;&gt;&lt;/a&gt;Deploy to remote sites&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;$ hexo deploy&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/deployment.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deployment&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
