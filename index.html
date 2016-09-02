@@ -251,6 +251,114 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/02/临时启动一个http-Server传送文件/" itemprop="url">
+                  临时启动一个http Server传送文件
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-09-02T17:40:31+08:00" content="2016-09-02">
+              2016-09-02
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/02/临时启动一个http-Server传送文件/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/02/临时启动一个http-Server传送文件/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="查看端口有没有使用："><a href="#查看端口有没有使用：" class="headerlink" title="查看端口有没有使用："></a>查看端口有没有使用：</h4><p>可以没有这一步，这里只是确认一下你预服务的端口没有被其他服务占用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">netstat -natpl|grep 端口号</div></pre></td></tr></table></figure>
+<h4 id="目标机打开个http服务："><a href="#目标机打开个http服务：" class="headerlink" title="目标机打开个http服务："></a>目标机打开个http服务：</h4><p>有些机器上会出现<code>No module named SimpleHTTPServe</code>， 重新装python吧！  在python 3.x 中， </p>
+<p>在 python 2.x 中 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m SimpleHTTPServe port</div></pre></td></tr></table></figure>
+<p>在 python 3.x 中 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python -m http.server port</div></pre></td></tr></table></figure>
+<h4 id="接收机下载文件："><a href="#接收机下载文件：" class="headerlink" title="接收机下载文件："></a>接收机下载文件：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">wget http://目标机ip：端口号/文件名（wget限速：wget --limit-rate=nM）</div></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/09/02/ansible小试牛刀/" itemprop="url">
                   ansible小试牛刀
                 </a>
@@ -1313,118 +1421,6 @@ import java.nio.charset.CodingErrorAction
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/06/30/mesos_install/" itemprop="url">
-                  mesos_install
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">Posted on</span>
-            <time itemprop="dateCreated" datetime="2016-06-30T10:39:26+08:00" content="2016-06-30">
-              2016-06-30
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/30/mesos_install/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/30/mesos_install/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-            
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>为了使用spark 的基于mesos的集群方式, 需要安装mesos, 网上教程很多，但感觉有些繁琐，其实说起来也就几步而已。 </p>
-</blockquote>
-<ul>
-<li><p>下载mvn, 并建立软连接<br> <code>wget http://mirror.nexcess.net/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz</code><br>  <code>sudo tar -zxf apache-maven-3.0.5-bin.tar.gz -C /opt/</code><br>  <code>sudo ln -s /opt/apache-maven-3.0.5/bin/mvn /usr/bin/mvn</code></p>
-</li>
-<li><p>yum直接安装各种依耐包<br>  <code>sudo yum install -y python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel subversion-devel apr-util-devel gcc-g++</code></p>
-</li>
-<li>下载mesos源码包<br><code>http://archive.apache.org/dist/mesos/0.21.0/mesos-0.21.0.tar.gz (下载这个版本主要是为了匹配spark 1.6.1)</code></li>
-<li>解压该源码包并执行编译、安装(在编译阶段会去下载大量的包， 整个过程 一般得20～30 分钟)</li>
-</ul>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1470,7 +1466,7 @@ import java.nio.charset.CodingErrorAction
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>

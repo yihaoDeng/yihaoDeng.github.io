@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2016-09-02T09:33:40.000Z</updated>
+  <updated>2016-09-02T10:02:11.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,32 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>临时启动一个http Server传送文件</title>
+    <link href="http://yoursite.com/2016/09/02/%E4%B8%B4%E6%97%B6%E5%90%AF%E5%8A%A8%E4%B8%80%E4%B8%AAhttp-Server%E4%BC%A0%E9%80%81%E6%96%87%E4%BB%B6/"/>
+    <id>http://yoursite.com/2016/09/02/临时启动一个http-Server传送文件/</id>
+    <published>2016-09-02T09:40:31.000Z</published>
+    <updated>2016-09-02T10:02:11.000Z</updated>
+    
+    <content type="html">&lt;h4 id=&quot;查看端口有没有使用：&quot;&gt;&lt;a href=&quot;#查看端口有没有使用：&quot; class=&quot;headerlink&quot; title=&quot;查看端口有没有使用：&quot;&gt;&lt;/a&gt;查看端口有没有使用：&lt;/h4&gt;&lt;p&gt;可以没有这一步，这里只是确认一下你预服务的端口没有被其他服务占用&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;netstat -natpl|grep 端口号&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;目标机打开个http服务：&quot;&gt;&lt;a href=&quot;#目标机打开个http服务：&quot; class=&quot;headerlink&quot; title=&quot;目标机打开个http服务：&quot;&gt;&lt;/a&gt;目标机打开个http服务：&lt;/h4&gt;&lt;p&gt;有些机器上会出现&lt;code&gt;No module named SimpleHTTPServe&lt;/code&gt;， 重新装python吧！  在python 3.x 中， &lt;/p&gt;
+&lt;p&gt;在 python 2.x 中 &lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;python -m SimpleHTTPServe port&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;在 python 3.x 中 &lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;python -m http.server port&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;接收机下载文件：&quot;&gt;&lt;a href=&quot;#接收机下载文件：&quot; class=&quot;headerlink&quot; title=&quot;接收机下载文件：&quot;&gt;&lt;/a&gt;接收机下载文件：&lt;/h4&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;wget http://目标机ip：端口号/文件名（wget限速：wget --limit-rate=nM）&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;</content>
+    
+    <summary type="html">
+    
+      &lt;h4 id=&quot;查看端口有没有使用：&quot;&gt;&lt;a href=&quot;#查看端口有没有使用：&quot; class=&quot;headerlink&quot; title=&quot;查看端口有没有使用：&quot;&gt;&lt;/a&gt;查看端口有没有使用：&lt;/h4&gt;&lt;p&gt;可以没有这一步，这里只是确认一下你预服务的端口没有被其他服务占用&lt;/p&gt;
+&lt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>ansible小试牛刀</title>

@@ -251,6 +251,118 @@
             
               
                 
+                <a class="post-title-link" href="/2016/06/30/mesos_install/" itemprop="url">
+                  mesos_install
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">Posted on</span>
+            <time itemprop="dateCreated" datetime="2016-06-30T10:39:26+08:00" content="2016-06-30">
+              2016-06-30
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/30/mesos_install/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/30/mesos_install/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+            
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>为了使用spark 的基于mesos的集群方式, 需要安装mesos, 网上教程很多，但感觉有些繁琐，其实说起来也就几步而已。 </p>
+</blockquote>
+<ul>
+<li><p>下载mvn, 并建立软连接<br> <code>wget http://mirror.nexcess.net/apache/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz</code><br>  <code>sudo tar -zxf apache-maven-3.0.5-bin.tar.gz -C /opt/</code><br>  <code>sudo ln -s /opt/apache-maven-3.0.5/bin/mvn /usr/bin/mvn</code></p>
+</li>
+<li><p>yum直接安装各种依耐包<br>  <code>sudo yum install -y python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel subversion-devel apr-util-devel gcc-g++</code></p>
+</li>
+<li>下载mesos源码包<br><code>http://archive.apache.org/dist/mesos/0.21.0/mesos-0.21.0.tar.gz (下载这个版本主要是为了匹配spark 1.6.1)</code></li>
+<li>解压该源码包并执行编译、安装(在编译阶段会去下载大量的包， 整个过程 一般得20～30 分钟)</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/06/30/first/" itemprop="url">
                   使用ipython+pyspark
                 </a>
@@ -488,7 +600,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-count">13</span>
               <span class="site-state-item-name">posts</span>
             </a>
           </div>
